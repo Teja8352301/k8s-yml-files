@@ -14,16 +14,29 @@ spec:
       labels:
         app: mongodb
     spec:
+      volumes:
+        - name: mongo-db-storage
+          persistentVolumeClaim:
+            claimName: mongo-db-claim
       containers:
-      - name: mongodb
-        image: mongo
-        ports:
-        - containerPort: 27017
-        env:
-        - name: MONGO_INITDB_ROOT_USERNAME
-          value: mongodb
-        - name: MONGO_INITDB_ROOT_PASSWORD
-          value: mongodb
+        - name: mongodb
+          image: mongo
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongo-db-storage
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: secret-keys
+                  key: mongo-user-name
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret-keys
+                  key: mongo-password
 ---
 apiVersion: v1
 kind: Service

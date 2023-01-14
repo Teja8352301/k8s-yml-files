@@ -28,11 +28,20 @@ spec:
             - containerPort: 8080
           env:
             - name: ME_CONFIG_MONGODB_AUTH_USERNAME
-              value: mongodb
+              valueFrom:
+                secretKeyRef:
+                  name: secret-keys
+                  key: mongo-user-name
             - name: ME_CONFIG_MONGODB_ADMINPASSWORD
-              value: mongodb
+              valueFrom:
+                secretKeyRef:
+                  name: secret-keys
+                  key: mongo-password
             - name: ME_CONFIG_MONGODB_SERVER
-              value: mongodb-service
+              valueFrom:
+                configMapKeyRef:
+                  name: app-urls
+                  key: mongo-server-url
             - name: ME_CONFIG_MONGODB_PORT
               value: '27017'
             - name: MODE
