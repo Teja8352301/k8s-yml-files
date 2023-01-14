@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+
+kind: Deployment
+
+metadata:
+  name: node-deployment
+
+  labels:
+    app: node_kubernetes
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: node_kubernetes
+
+  template:
+    metadata:
+      labels:
+        app: node_kubernetes
+
+    spec:
+      containers:
+        - name: node-kubernetes
+          image: tejayerraguntla9/node_kubernetes
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ME_CONFIG_MONGODB_AUTH_USERNAME
+              value: mongodb
+            - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+              value: mongodb
+            - name: ME_CONFIG_MONGODB_SERVER
+              value: mongodb-service
+            - name: ME_CONFIG_MONGODB_PORT
+              value: '27017'
+            - name: MODE
+              value: k8
